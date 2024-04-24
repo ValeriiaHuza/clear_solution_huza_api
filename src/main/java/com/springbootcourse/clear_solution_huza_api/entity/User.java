@@ -1,6 +1,7 @@
 package com.springbootcourse.clear_solution_huza_api.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,15 +21,22 @@ public class User {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @NotBlank(message = "First name is required")
+    @Size(max = 45, message = "Max first name length is 45")
     @Column(name = "first_name", nullable = false, length = 45)
     private String firstName;
 
+    @NotBlank(message = "Last name is required")
+    @Size(max = 45, message = "Max last name length is 45")
     @Column(name = "last_name", nullable = false, length = 45)
     private String lastName;
 
+    @NotBlank(message = "Email is required")
+    @Pattern(regexp = "^[\\w-._]+@([\\w-]+\\.)+[\\w-]{2,4}$" , message = "Email isn't correct")
     @Column(name = "email", nullable = false, length = 60)
     private String email;
 
+    @NotNull(message = "Birth date is required")
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
