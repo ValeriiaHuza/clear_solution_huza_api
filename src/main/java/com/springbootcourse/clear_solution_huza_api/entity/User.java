@@ -48,7 +48,7 @@ public class User {
     @Column(name = "address")
     private String address;
 
-    //TODO: add pattern
+    @Pattern(regexp = "^[0-9\\-\\+]{9,13}$",message = "Phone format isn't correct")
     @Column(name = "phone_number", length = 45)
     private String phoneNumber;
 

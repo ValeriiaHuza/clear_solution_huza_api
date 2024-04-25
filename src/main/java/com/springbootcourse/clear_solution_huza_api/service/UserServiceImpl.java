@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
 
         if (newUser.getFirstName() != null) {
             if (newUser.getFirstName().isBlank()) {
-                errorValidateMessage.append("firstName : First name cannot be blank \n");
+                errorValidateMessage.append("firstName : First name can't be blank \n");
             } else {
                 updatedUser.setFirstName(newUser.getFirstName());
             }
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
 
         if (newUser.getLastName() != null) {
             if (newUser.getLastName().isBlank()) {
-                errorValidateMessage.append("lastName : Last name cannot be blank \n");
+                errorValidateMessage.append("lastName : Last name can't be blank \n");
             } else {
                 updatedUser.setLastName(newUser.getLastName());
             }
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
 
         if (newUser.getEmail() != null) {
             if (newUser.getEmail().isBlank() || !newUser.getEmail().matches("^[\\w-._]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
-                errorValidateMessage.append("email : Email invalid \n");
+                errorValidateMessage.append("email : Email format isn't correct \n");
             } else {
                 updatedUser.setEmail(newUser.getEmail());
             }
@@ -97,16 +97,20 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        if (!errorValidateMessage.isEmpty()) {
-            throw new RuntimeException(errorValidateMessage.toString());
-        }
-
         if (newUser.getAddress() != null) {
             updatedUser.setAddress(newUser.getAddress());
         }
 
         if (newUser.getPhoneNumber() != null) {
-            updatedUser.setPhoneNumber(newUser.getPhoneNumber());
+            if (newUser.getPhoneNumber().isBlank() || !newUser.getPhoneNumber().matches("^[0-9\\-\\+]{9,13}$")) {
+                errorValidateMessage.append("phoneNumber : Phone format isn't correct \n");
+            } else {
+                updatedUser.setPhoneNumber(newUser.getPhoneNumber());
+            }
+        }
+
+        if (!errorValidateMessage.isEmpty()) {
+            throw new RuntimeException(errorValidateMessage.toString());
         }
     }
 
