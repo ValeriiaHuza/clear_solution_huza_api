@@ -1,5 +1,6 @@
 package com.springbootcourse.clear_solution_huza_api;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.springbootcourse.clear_solution_huza_api.entity.User;
@@ -15,6 +16,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -27,9 +31,18 @@ class UserControllerIntegrationTests {
 
     private  User addedUser;
 
+    private ObjectMapper om;
+
+    @BeforeAll
+    public void setUpMapper(){
+        om = new ObjectMapper();
+        om.registerModule(new JavaTimeModule());
+    }
+
     @BeforeAll
     public void addUser() throws Exception {
-        String userJson = """
+
+        String userJsonTest = """
                 {"firstName": "Mariia",
                     "lastName": "Huza",
                     "email": "mariia@gmail.com",
@@ -38,7 +51,7 @@ class UserControllerIntegrationTests {
 
         MvcResult resultCreate = mockMvc.perform(post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(userJson))
+                        .content(userJsonTest))
                 .andExpect(status().isCreated())
                 .andReturn();
 
@@ -50,10 +63,17 @@ class UserControllerIntegrationTests {
         addedUser = om.readValue(userString, User.class);
     }
 
-    @Test void getAllUsersTest() throws Exception {
-       mockMvc.perform(get("/api/users"))
+    @Test
+    void getAllUsersTest() throws Exception {
+        MvcResult result = mockMvc.perform(get("/api/users"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String userString = result.getResponse().getContentAsString();
+        List<User> users = om.readValue(userString, new TypeReference<List<User>>() {});
+
+        assertThat(users.contains(addedUser));
 
     }
 
@@ -118,9 +138,6 @@ class UserControllerIntegrationTests {
                         .andReturn();
 
         String userString = resultCreate.getResponse().getContentAsString();
-
-        ObjectMapper om = new ObjectMapper();
-        om.registerModule(new JavaTimeModule());
 
         User user = om.readValue(userString, User.class);
 
