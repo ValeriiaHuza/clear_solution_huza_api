@@ -3,10 +3,7 @@ package com.springbootcourse.clear_solution_huza_api.entity;
 import com.springbootcourse.clear_solution_huza_api.utils.UnderAge;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDate;
 
