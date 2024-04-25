@@ -1,5 +1,6 @@
 package com.springbootcourse.clear_solution_huza_api.entity;
 
+import com.springbootcourse.clear_solution_huza_api.utils.UnderAge;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -37,12 +39,14 @@ public class User {
     private String email;
 
     @NotNull(message = "Birth date is required")
+    @UnderAge()
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
     @Column(name = "address")
     private String address;
 
+    //add pattern
     @Column(name = "phone_number", length = 45)
     private String phoneNumber;
 

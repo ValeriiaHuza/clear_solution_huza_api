@@ -5,7 +5,6 @@ import com.springbootcourse.clear_solution_huza_api.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class UserRestController {
-
     private final UserService userService;
 
     public UserRestController(UserService userService) {
@@ -33,12 +31,22 @@ public class UserRestController {
     @PostMapping("/users")
     public ResponseEntity<User> addNewUser(@Valid @RequestBody User user){
         user.setId(0);
+
         try {
             return new ResponseEntity<>(this.userService.save(user), HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>((MultiValueMap<String, String>) e, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
+    //check validation
+    @PutMapping("/users/{userId}")
+    public User updateNewUser(@RequestBody User user, @PathVariable int userId){
+        return userService.update(user, userId);
+    }
 
+    @DeleteMapping("/users/{userId}")
+    public void deleteUserById(@PathVariable int userId){
+        userService.deleteById(userId);
+    }
 }

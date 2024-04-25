@@ -13,5 +13,5 @@ public class UserErrorResponse {
 
     private int status;
     private String message;
-    private long timestamp;
+    private String timestamp;
 }

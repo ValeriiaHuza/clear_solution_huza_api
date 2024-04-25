@@ -2,6 +2,7 @@ package com.springbootcourse.clear_solution_huza_api.controller;
 
 import com.springbootcourse.clear_solution_huza_api.error.UserErrorResponse;
 import com.springbootcourse.clear_solution_huza_api.error.UserNotFoundException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,13 +19,13 @@ public class UserExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<UserErrorResponse> handleException(UserNotFoundException exception){
-        UserErrorResponse errorResponse = new UserErrorResponse(HttpStatus.NOT_FOUND.value(), exception.getMessage(), System.currentTimeMillis());
+        UserErrorResponse errorResponse = new UserErrorResponse(HttpStatus.NOT_FOUND.value(), exception.getMessage(), new Timestamp(System.currentTimeMillis()).toString());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     public ResponseEntity<UserErrorResponse> handleException(Exception exc) {
-        UserErrorResponse errorResponse = new UserErrorResponse(HttpStatus.BAD_REQUEST.value(),exc.getMessage(),System.currentTimeMillis());
+        UserErrorResponse errorResponse = new UserErrorResponse(HttpStatus.BAD_REQUEST.value(),exc.getMessage(),new Timestamp(System.currentTimeMillis()).toString());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
@@ -35,7 +37,6 @@ public class UserExceptionHandler {
             String fieldName;
             try {
                 fieldName = ((FieldError) error).getField();
-
             } catch (ClassCastException ex) {
                 fieldName = error.getObjectName();
             }
