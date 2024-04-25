@@ -14,6 +14,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class UserRestController {
+
+    //TODO
+    //add phone number validation
+
     private final UserService userService;
 
     public UserRestController(UserService userService) {
@@ -21,17 +25,17 @@ public class UserRestController {
     }
 
     @GetMapping("/users")
-    public List<User> findAllUsers(){
+    public List<User> findAllUsers() {
         return userService.findAll();
     }
 
     @GetMapping("/users/{userId}")
-    public User findUserById (@PathVariable int userId){
+    public User findUserById(@PathVariable int userId) {
         return userService.findById(userId);
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> addNewUser(@Valid @RequestBody User user){
+    public ResponseEntity<User> addNewUser(@Valid @RequestBody User user) {
         user.setId(0);
 
         try {
@@ -43,12 +47,12 @@ public class UserRestController {
 
     //check validation
     @PutMapping("/users/{userId}")
-    public User updateNewUser(@RequestBody User user, @PathVariable int userId){
+    public User updateNewUser(@RequestBody User user, @PathVariable int userId) {
         return userService.update(user, userId);
     }
 
     @DeleteMapping("/users/{userId}")
-    public void deleteUserById(@PathVariable int userId){
+    public void deleteUserById(@PathVariable int userId) {
         userService.deleteById(userId);
     }
 

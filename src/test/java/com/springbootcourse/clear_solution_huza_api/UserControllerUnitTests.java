@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
-
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,23 +24,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class UserControllerIntegrationTests {
+class UserControllerUnitTests {
     @Autowired
     private MockMvc mockMvc;
 
-    private  User addedUser;
+    private User addedUser;
 
     private ObjectMapper om;
 
     @BeforeAll
-    public void setUpMapper(){
+    public void setUpMapper() {
         om = new ObjectMapper();
         om.registerModule(new JavaTimeModule());
     }
 
     @BeforeAll
     public void addUser() throws Exception {
-
         String userJsonTest = """
                 {"firstName": "Mariia",
                     "lastName": "Huza",
@@ -71,10 +69,9 @@ class UserControllerIntegrationTests {
                 .andReturn();
 
         String userString = result.getResponse().getContentAsString();
-        List<User> users = om.readValue(userString, new TypeReference<List<User>>() {});
+        List<User> users = om.readValue(userString, new TypeReference<>() {});
 
         assertThat(users.contains(addedUser));
-
     }
 
     @Test
@@ -88,6 +85,16 @@ class UserControllerIntegrationTests {
     }
 
     @Test
+    public void getUserByIdTestUnsuccessful() throws Exception {
+
+        ResultActions result = mockMvc.perform(get("/api/users/{id}", 0));
+
+        // Assert
+        result.andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
     public void createUserTest() throws Exception {
         // Arrange
         String userJson = """
@@ -97,9 +104,9 @@ class UserControllerIntegrationTests {
                     "birthDate": "2001-01-01"
                 }""";
 
-       mockMvc.perform(post("/api/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(userJson))
+        mockMvc.perform(post("/api/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson))
                 //.andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isCreated());
     }
@@ -114,14 +121,14 @@ class UserControllerIntegrationTests {
                 }""";
 
         // Act
-       mockMvc.perform(post("/api/users")
-                       .contentType(MediaType.APPLICATION_JSON)
-                       .content(userJson))
-                       .andExpect(status().isBadRequest());
+        mockMvc.perform(post("/api/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void updateUserTest() throws Exception {
+    public void updateUserTestSuccess() throws Exception {
 
         String userJson = """
                 {"firstName": "Mariia",
@@ -134,8 +141,8 @@ class UserControllerIntegrationTests {
         MvcResult resultCreate = mockMvc.perform(post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson))
-                        .andExpect(status().isCreated())
-                        .andReturn();
+                .andExpect(status().isCreated())
+                .andReturn();
 
         String userString = resultCreate.getResponse().getContentAsString();
 
@@ -143,7 +150,7 @@ class UserControllerIntegrationTests {
 
         String newName = "Valeriia";
         String newEmail = "valeriia.email@example.com";
-        String updatedUserJson = "{\"firstName\":\"" + newName +"\",\"email\":\"" + newEmail +"\"}";
+        String updatedUserJson = "{\"firstName\":\"" + newName + "\",\"email\":\"" + newEmail + "\"}";
 
 
         ResultActions result = mockMvc.perform(put("/api/users/{id}", user.getId())
@@ -157,6 +164,21 @@ class UserControllerIntegrationTests {
                 .andExpect(jsonPath("$.id").value(user.getId()))
                 .andExpect(jsonPath("$.firstName").value(newName))
                 .andExpect(jsonPath("$.email").value(newEmail));
+    }
+
+    @Test
+    public void updateUserTestUnsuccessful() throws Exception {
+        String newName = "Valeriia";
+        String newEmail = "valeriia.email@";
+        String updatedUserJson = "{\"firstName\":\"" + newName + "\",\"email\":\"" + newEmail + "\"}";
+
+
+        ResultActions result = mockMvc.perform(put("/api/users/{id}", addedUser.getId())
+                .content(updatedUserJson));
+
+
+        // Assert
+        result.andExpect(status().isBadRequest());
     }
 
     @Test
@@ -186,6 +208,38 @@ class UserControllerIntegrationTests {
 
         // Assert
         result.andExpect(status().isOk());
+    }
+
+    @Test
+    void getUsersInRangeTestSuccess() throws Exception {
+        String from = "2000-10-01";
+        String to = "2001-10-01";
+        MvcResult result = mockMvc.perform(get("/api/users/range?from=" + from + "&to=" + to ))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String userString = result.getResponse().getContentAsString();
+        List<User> users = om.readValue(userString, new TypeReference<>() {});
+
+        assertThat(users.contains(addedUser));
+
+    }
+
+    @Test
+    void getUsersInRangeTestUnsuccessful() throws Exception {
+        String from = "2002-10-01";
+        String to = "2003-10-01";
+        MvcResult result = mockMvc.perform(get("/api/users/range?from=" + from + "&to=" + to ))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String userString = result.getResponse().getContentAsString();
+        List<User> users = om.readValue(userString, new TypeReference<>() {});
+
+        assertThat(users.contains(addedUser));
+
     }
 
 

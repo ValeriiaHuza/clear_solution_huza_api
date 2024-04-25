@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Value("${user.validAge}")
     private int VALID_AGE;
@@ -32,17 +32,16 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User findById(int id) {
-       Optional<User> res =  userRepository.findById(id);
+        Optional<User> res = userRepository.findById(id);
 
-       User user;
-       if(res.isPresent()) {
-           user = res.get();
-       }
-       else {
-           throw new UserNotFoundException("User not found for id: " + id);
-       }
+        User user;
+        if (res.isPresent()) {
+            user = res.get();
+        } else {
+            throw new UserNotFoundException("User not found for id: " + id);
+        }
 
-       return user;
+        return user;
     }
 
     @Override
@@ -55,60 +54,60 @@ public class UserServiceImpl implements UserService{
 
         User updatedUser = findById(id);
 
+        validateUser(updatedUser, newUser);
+
+        return userRepository.save(updatedUser);
+    }
+
+    private void validateUser(User updatedUser, User newUser) {
         StringBuilder errorValidateMessage = new StringBuilder();
 
-        if (newUser.getFirstName()!=null){
-            if(newUser.getFirstName().isBlank()){
-                errorValidateMessage.append("firstName : First name cannot be blank + \n");
-            }
-            else {
+        if (newUser.getFirstName() != null) {
+            if (newUser.getFirstName().isBlank()) {
+                errorValidateMessage.append("firstName : First name cannot be blank \n");
+            } else {
                 updatedUser.setFirstName(newUser.getFirstName());
             }
         }
 
-        if (newUser.getLastName()!=null){
-            if(newUser.getLastName().isBlank()){
-                errorValidateMessage.append("lastName : Last name cannot be blank + \n");
-            }
-            else {
+        if (newUser.getLastName() != null) {
+            if (newUser.getLastName().isBlank()) {
+                errorValidateMessage.append("lastName : Last name cannot be blank \n");
+            } else {
                 updatedUser.setLastName(newUser.getLastName());
             }
         }
 
-        if(newUser.getEmail()!=null){
-            if(newUser.getEmail().isBlank() || !newUser.getEmail().matches("^[\\w-._]+@([\\w-]+\\.)+[\\w-]{2,4}$")){
-                errorValidateMessage.append("email : Email invalid + \n");
-            }
-            else {
+        if (newUser.getEmail() != null) {
+            if (newUser.getEmail().isBlank() || !newUser.getEmail().matches("^[\\w-._]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+                errorValidateMessage.append("email : Email invalid \n");
+            } else {
                 updatedUser.setEmail(newUser.getEmail());
             }
         }
 
-        if(newUser.getBirthDate()!=null){
+        if (newUser.getBirthDate() != null) {
             LocalDate currentDate = LocalDate.now();
             Period period = Period.between(newUser.getBirthDate(), currentDate);
 
-            if(period.getYears() < VALID_AGE){
+            if (period.getYears() < VALID_AGE) {
                 errorValidateMessage.append("birthDate : User must be at least ").append(VALID_AGE).append(" years old \n");
-            }
-            else {
+            } else {
                 updatedUser.setBirthDate(newUser.getBirthDate());
             }
         }
 
-        if(!errorValidateMessage.isEmpty()){
+        if (!errorValidateMessage.isEmpty()) {
             throw new RuntimeException(errorValidateMessage.toString());
         }
 
-        if(newUser.getAddress()!=null){
+        if (newUser.getAddress() != null) {
             updatedUser.setAddress(newUser.getAddress());
         }
 
-        if(newUser.getPhoneNumber()!=null){
+        if (newUser.getPhoneNumber() != null) {
             updatedUser.setPhoneNumber(newUser.getPhoneNumber());
         }
-
-        return userRepository.save(updatedUser);
     }
 
     @Override

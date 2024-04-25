@@ -2,8 +2,14 @@ package com.springbootcourse.clear_solution_huza_api.entity;
 
 import com.springbootcourse.clear_solution_huza_api.utils.UnderAge;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import lombok.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
@@ -14,7 +20,6 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "users")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -31,7 +36,7 @@ public class User {
     private String lastName;
 
     @NotBlank(message = "Email is required")
-    @Pattern(regexp = "^[\\w-._]+@([\\w-]+\\.)+[\\w-]{2,4}$" , message = "Email isn't correct")
+    @Pattern(regexp = "^[\\w-._]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Email format isn't correct")
     @Column(name = "email", nullable = false, length = 60)
     private String email;
 
@@ -43,7 +48,7 @@ public class User {
     @Column(name = "address")
     private String address;
 
-    //add pattern
+    //TODO: add pattern
     @Column(name = "phone_number", length = 45)
     private String phoneNumber;
 

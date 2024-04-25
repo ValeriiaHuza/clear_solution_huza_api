@@ -8,8 +8,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
-
-
     @Query("select u from User u where u.birthDate between ?1 and ?2")
-    List<User> findByBirthDateBetween(LocalDate fromDate, LocalDate toDate);;
+    List<User> findByBirthDateBetween(LocalDate fromDate, LocalDate toDate);
 }
