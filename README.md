@@ -1,4 +1,45 @@
 
+# RESTful API FOR USER MANAGING
+
+This api provides functionality for managing user data.
+
+
+## Steps to Setup
+
+**1. Clone the application**
+
+```bash
+  https://github.com/ValeriiaHuza/clear_solution_huza_api.git
+```
+
+**2. Database Setup**
+
+This application uses MySQL as the database. Before running the application, ensure that MySQL is installed on your system and create a database for the application. Follow these steps:
+
+- **Install MySql:** If MySql is not already installed, download and install it from the official website: https://www.mysql.com/downloads/
+
+- **Create Database**
+
+```bash
+  create database user_db
+```
+
+- **Or run SQL Script:** [user_db.sql](https://github.com/ValeriiaHuza/clear_solution_huza_api/blob/main/user_db.sql) script
+
+**3. Change Database Configuration**
+
+- open `src/main/resources/application.properties`
+
+- change `spring.datasource.username` and `spring.datasource.password`
+
+**4. Build and run the app using maven**
+
+```bash
+  mvn clean spring-boot:run
+```
+
+The app will start running at http://localhost:8080.
+
 ## Rest API
 
 #### Retrieve all users
