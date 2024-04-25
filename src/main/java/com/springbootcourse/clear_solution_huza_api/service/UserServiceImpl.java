@@ -116,4 +116,12 @@ public class UserServiceImpl implements UserService{
         userRepository.deleteById(id);
     }
 
+    @Override
+    public List<User> findUsersByBirthDateRange(LocalDate fromDate, LocalDate toDate) {
+        if (fromDate.isAfter(toDate)) {
+            throw new RuntimeException("Invalid date range: 'From' must be less than 'To'");
+        }
+        return userRepository.findByBirthDateBetween(fromDate, toDate);
+    }
+
 }

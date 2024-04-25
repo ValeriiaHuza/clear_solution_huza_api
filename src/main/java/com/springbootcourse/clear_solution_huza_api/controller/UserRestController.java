@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @RestController
@@ -48,5 +50,22 @@ public class UserRestController {
     @DeleteMapping("/users/{userId}")
     public void deleteUserById(@PathVariable int userId){
         userService.deleteById(userId);
+    }
+
+    @GetMapping("/users/range")
+    public List<User> searchUsersByBirthDateRange(
+            @RequestParam("from") String fromDateString,
+            @RequestParam("to") String toDateString) {
+
+        LocalDate fromDate;
+        LocalDate toDate;
+        try {
+            fromDate = LocalDate.parse(fromDateString);
+            toDate = LocalDate.parse(toDateString);
+        } catch (DateTimeParseException e) {
+            throw new RuntimeException("Invalid date format. Please use YYYY-MM-DD format.");
+        }
+
+        return userService.findUsersByBirthDateRange(fromDate, toDate);
     }
 }
