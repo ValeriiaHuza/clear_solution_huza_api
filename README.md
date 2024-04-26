@@ -40,6 +40,49 @@ This application uses MySQL as the database. Before running the application, ens
 
 The app will start running at http://localhost:8080.
 
+## Model Description
+
+### User Entity
+
+The **`User`** entity represents a user in the system.
+
+### User Fields
+
+- ID:
+   - Type: Integer
+   - Description: Unique identifier for the user.
+- First Name:
+   - Type: String
+   - Constraints:
+       - Required, not blank
+       - Maximum length: 45 characters
+- Last Name:
+    - Type: String
+    - Constraints:
+        - Required, not blank
+        - Maximum length: 45 characters
+- Email:
+    - Type: String
+    - Constraints:
+        - Required, not blank
+        - Valid email format: valid_email_format@domain.com
+        - Maximum length: 60 characters
+- Birth Date:
+    - Type: LocalDate
+    - Constraints:
+        - Required
+        - Must be earlier than the current date
+        - Validation against underage (dependent on implementation of UnderAge annotation)
+- Address:
+    - Type: String
+    - Description: User's address (optional)
+- Phone Number:
+    - Type: String
+    - Constraints:
+         - Valid phone number format: +380..., 380..., 380-73-..., 0683....
+         - Maximum length: 45 characters
+         - Description: User's phone number (optional)
+
 ## Rest API
 
 #### Retrieve all users
