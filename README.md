@@ -1,7 +1,7 @@
 
-# RESTful API FOR USER MANAGING
+# RESTful API FOR USER MANAGMENT
 
-This api provides functionality for managing user data.
+This API provides functionality for managing user data.
 
 
 ## Steps to Setup
