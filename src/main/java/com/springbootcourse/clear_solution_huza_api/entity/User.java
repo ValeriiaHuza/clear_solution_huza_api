@@ -1,5 +1,6 @@
 package com.springbootcourse.clear_solution_huza_api.entity;
 
+import com.springbootcourse.clear_solution_huza_api.utils.NotFutureDate;
 import com.springbootcourse.clear_solution_huza_api.utils.UnderAge;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -42,6 +43,7 @@ public class User {
 
     @NotNull(message = "Birth date is required")
     @UnderAge()
+    @NotFutureDate()
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 

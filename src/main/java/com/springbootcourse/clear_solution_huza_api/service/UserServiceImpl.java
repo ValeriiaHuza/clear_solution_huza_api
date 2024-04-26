@@ -88,6 +88,11 @@ public class UserServiceImpl implements UserService {
 
         if (newUser.getBirthDate() != null) {
             LocalDate currentDate = LocalDate.now();
+
+             if (newUser.getBirthDate().isAfter(currentDate)){
+                 errorValidateMessage.append("birthDate : Date must not be in the future \n");
+             }
+
             Period period = Period.between(newUser.getBirthDate(), currentDate);
 
             if (period.getYears() < VALID_AGE) {
