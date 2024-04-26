@@ -63,8 +63,8 @@ The app will start running at http://localhost:8080.
 - Response:
    - Status: 
        - 200 OK
-       - 404 Not found
-   - Body: User object as JSON
+       - 404 Not found: User not found
+   - Body: User object as JSON (If it was found)
 
 #### Add a new user
 
