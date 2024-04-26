@@ -1,5 +1,5 @@
 
-# RESTful API FOR USER MANAGMENT
+# RESTful API FOR USER MANAGEMENT
 
 This API provides functionality for managing user data.
 
